@@ -1,0 +1,61 @@
+plugins {
+  id 'java'
+  id 'io.quarkus'
+}
+
+version '1.0.0-SNAPSHOT'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+  implementation 'io.quarkus:quarkus-resteasy-jsonb'
+  implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+  implementation 'io.quarkus:quarkus-jdbc-h2'
+
+  testImplementation 'io.quarkus:quarkus-junit5'
+  testImplementation 'io.rest-assured:rest-assured'
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+test {
+  systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+}
+
+task webpack(type: Exec) {
+  inputs.file('package-lock.json').withPathSensitivity(PathSensitivity.RELATIVE)
+  inputs.dir('src/main/javascript/').withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.dir("src/main/resources/META-INF/resources/")
+  outputs.cacheIf { true }
+
+  commandLine "npm", "run", "build"
+}
+
+processResources {
+  dependsOn webpack
+}
+
+task npmInstall(type: Exec) {
+  commandLine 'npm', 'install', '--ignore-scripts'
+}
+
+task npmClean(type: Delete) {
+  delete "$projectDir/node_modules/"
+  delete "$projectDir/package-lock.json"
+}

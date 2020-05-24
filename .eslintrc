@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "standard",
+    "standard-jsx",
+    "prettier",
+    "prettier/standard",
+    "prettier/react"
+  ],
+  "plugins": ["standard", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {},
+  "globals": {
+    "fetch": false
+  },
+  "settings": {
+    "react": {
+      "pragma": "h"
+    }
+  }
+}
