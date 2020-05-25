@@ -25,16 +25,6 @@ public class OwnerResource {
         return Response.ok().entity(new Result<>(Owner.findLikeName(filter), null)).build();
     }
 
-    @Path("{ownerId}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOwner(@PathParam("ownerId") final Long ownerId) {
-        return Response.ok()
-                .entity(Owner.findByIdOptional(ownerId).map(owner -> new Result<>(owner, null))
-                        .orElseGet(() -> new Result<>(null, Arrays.asList("Owner not found."))))
-                .cacheControl(CacheControlUtils.noCache()).build();
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -46,6 +36,16 @@ public class OwnerResource {
         owner.telephone = form.telephone;
         owner.persist();
         return Response.ok().entity(new Result<>(owner.id, null)).cacheControl(CacheControlUtils.noCache()).build();
+    }
+
+    @Path("{ownerId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwner(@PathParam("ownerId") final Long ownerId) {
+        return Response.ok()
+                .entity(Owner.findByIdOptional(ownerId).map(owner -> new Result<>(owner, null))
+                        .orElseGet(() -> new Result<>(null, Arrays.asList("Owner not found."))))
+                .cacheControl(CacheControlUtils.noCache()).build();
     }
 
     @Path("{ownerId}")
@@ -61,16 +61,6 @@ public class OwnerResource {
             return owner;
         }).map(owner -> new Result<>(owner.id, null))
                 .orElseGet(() -> new Result<>(null, Arrays.asList("Owner not found."))))
-                .cacheControl(CacheControlUtils.noCache()).build();
-    }
-
-    @Path("{ownerId}/pets/{petId}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPet(@PathParam("ownerId") final Long ownerId, @PathParam("petId") final Long petId) {
-        return Response.ok()
-                .entity(Pet.findByIdOptional(petId).map(pet -> new Result<>(pet, null))
-                        .orElseGet(() -> new Result<>(null, Arrays.asList("Pet not found."))))
                 .cacheControl(CacheControlUtils.noCache()).build();
     }
 
@@ -111,17 +101,6 @@ public class OwnerResource {
                 }).map(pet -> new Result<>(ownerId, null))
                         .orElseGet(() -> new Result<>(null, Arrays.asList("Pet not found."))))
                         .orElseGet(() -> new Result<>(null, Arrays.asList("Pet type not found."))))
-                .cacheControl(CacheControlUtils.noCache()).build();
-    }
-
-    @Path("{ownerId}/pets/{petId}/visits/{visitId}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getVisit(@PathParam("ownerId") final Long ownerId, @PathParam("petId") final Long petId,
-            @PathParam("visitId") final Long visitId) {
-        return Response.ok()
-                .entity(Visit.findByIdOptional(visitId).map(visit -> new Result<>(visit, null))
-                        .orElseGet(() -> new Result<>(null, Arrays.asList("Visit not found."))))
                 .cacheControl(CacheControlUtils.noCache()).build();
     }
 
