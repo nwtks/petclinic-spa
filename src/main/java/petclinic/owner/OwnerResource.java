@@ -1,6 +1,7 @@
 package petclinic.owner;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -22,7 +23,8 @@ public class OwnerResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOwners(@QueryParam("filter") final String filter) {
-        return Response.ok().entity(new Result<>(Owner.findLikeName(filter), null)).build();
+        final List<Owner> owners = filter == null || filter.isEmpty() ? Owner.listAll() : Owner.findLikeName(filter);
+        return Response.ok().entity(new Result<>(owners, null)).build();
     }
 
     @POST
